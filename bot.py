@@ -128,10 +128,13 @@ while quest != None:
 		bot_hand.add_card(blackjack.shoe.hit())
 
 		print(bot_hand.get_hand())
+	elif action == ''
 	else:
 		break
 
 	quest = game.question(bot_hand)
+
+print('test')
 
 
 
