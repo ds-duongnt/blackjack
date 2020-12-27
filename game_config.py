@@ -12,23 +12,39 @@ class Blackjack():
 	def run(self):
 		hands = self.shoe.deal_card(player_num = len(self.player))
 		return Round_play(dealer_hand = Dealer(hands[-1]), 
-			player_hand = [Hand(v) for v in hands[:-1]], shoe = self.shoe)
+			player_hand = [Hand(v) for v in hands[:-1]])
 
 
 class Round_play():
-	def __init__(self, dealer_hand, player_hand: list, shoe):
+	def __init__(self, dealer_hand, player_hand: list):
 		self.dealer = dealer_hand
 		self.players = player_hand
-		self.shoe = shoe
 
-	def question(self, player_hand) -> str:
-		if self.dealer.get_faceup_card().card_face == 'Ac':
+	def question(self, player_hand, count: int = 0) -> str:
+		# if player_hand.action == 0:
+		# 	if count == 0:
+		# 		if self.dealer.get_faceup_card().card_face == 'Ac':
+		# 			return 'Insurance? (Y/N) '
+		# 	else:
+		# 		if self.dealer.get_faceup_card().card_face == 'Ac' and self.dealer.blackjack_check():
+		# 			return None
+
+		# 	if player_hand.blackjack_check() == True:
+		# 		return None
+
+		# elif player_hand.get_max_score() == 21:
+		# 	return None
+
+		# return 'What is your choice? (X2, Hit, Stand or Split) '
+		if count == 0 and self.dealer.get_faceup_card().card_face == 'Ac':
 			return 'Insurance? (Y/N) '
-		elif self.dealer.blackjack_check() == True or player_hand.blackjack_check() == True or player_hand.get_max_score() == 21:
-			return None
+		elif (self.dealer.get_faceup_card().card_face == 'Ac' and self.dealer.blackjack_check()) or \
+		player_hand.blackjack_check() or \
+		any(v in player_hand.decision for v in ['x2','stand']) or \
+		player_hand.get_max_score() >= 21:
+			return None 
 		else:
 			return 'What is your choice? (X2, Hit, Stand or Split) '
-
 
 class Config():
 	def __init__(self, reset_shoe: float = 0.3, stand_on: str = 'soft 17', 

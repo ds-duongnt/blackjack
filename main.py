@@ -45,7 +45,7 @@ def main():
 			if bet <= player.balance:
 			
 				hands_deal = shoe.deal_card()
-			
+		
 				dealer = Dealer(hands_deal[-1])
 				faceup_card = dealer.get_faceup_card()
 				facedown_card = dealer.get_facedown_card()
@@ -57,7 +57,6 @@ def main():
 					
 				
 				player_hand = Hand(hands_deal[0])
-	
 				print(dealer_print)
 				print(hand_print(player_hand))
 
@@ -112,22 +111,23 @@ def main():
 							hand_in_play = deepcopy(hands[0])
 							hand_delete = False
 							# Player making decisions
-							while hand_in_play.get_printable_score() not in ['21','']: # Player stops making decisions if the hand is either Bj, 21 or Busted
+							while hand_in_play.get_printable_score() not in ['21',''] and hand_in_play.freeze == False: # Player stops making decisions if the hand is either Bj, 21 or Busted
 
 								choice = input(choice_question)
 
 								if choice.lower() == 'x2' and hand_in_play.action == 0 and player_hand.action == 0: # Switch to play_in_hand if you allow x2 after splitting
 									if bet*2 <= player.balance:
 										bet = bet*2
-										hand_in_play.add_card(shoe.hit())
+										hand_in_play.x2(shoe)
 										break # End decision block
 									else:
 										print('Your balance is too low')	
 								elif choice.lower() == 'hit':
-									hand_in_play.add_card(shoe.hit())
+									hand_in_play.hit(shoe)
 									print(dealer_print)
 									print(hand_print(hand_in_play))
 								elif choice.lower() == 'stand':
+									hand_in_play.stand()
 									break # End decision block
 								elif choice.lower() == 'split' and player_hand.split_check() == True: # Switch to play_in_hand if you allow to split multiple times
 									if player.balance >= bet*2:
@@ -166,7 +166,7 @@ def main():
 
 						else:
 							while dealer.get_max_score() < 17: # Dealer takes actions
-								dealer.add_card(shoe.hit())
+								dealer.hit(shoe)
 
 							dealer_score = dealer.get_max_score() # Dealer's score
 							for hand_played in hands_complete:
@@ -197,6 +197,7 @@ def main():
 									player.tie(bet)
 
 							break # End round
+					
 
 			else:
 				print('Betting money exceeds your bankroll')
@@ -204,6 +205,7 @@ def main():
 			if len(shoe.shoe) < int(card_quant*config.reset_shoe):
 				shoe.shuffle(reset=True)
 				print('----------------- Shuffle Time -----------------')
+
 
 if __name__ == '__main__':
 	main()
