@@ -12,7 +12,7 @@ class Blackjack():
 	def run(self):
 		hands = self.shoe.deal_card(player_num = len(self.player))
 		return Round_play(dealer_hand = Dealer(hands[-1]), 
-			player_hand = [Hand(v) for v in hands[:-1]])
+			player_hand = [Hand(hand, player = player) for hand, player in zip(hands[:-1], self.player)])
 
 
 class Round_play():
@@ -21,21 +21,6 @@ class Round_play():
 		self.players = player_hand
 
 	def question(self, player_hand, count: int = 0) -> str:
-		# if player_hand.action == 0:
-		# 	if count == 0:
-		# 		if self.dealer.get_faceup_card().card_face == 'Ac':
-		# 			return 'Insurance? (Y/N) '
-		# 	else:
-		# 		if self.dealer.get_faceup_card().card_face == 'Ac' and self.dealer.blackjack_check():
-		# 			return None
-
-		# 	if player_hand.blackjack_check() == True:
-		# 		return None
-
-		# elif player_hand.get_max_score() == 21:
-		# 	return None
-
-		# return 'What is your choice? (X2, Hit, Stand or Split) '
 		if count == 0 and self.dealer.get_faceup_card().card_face == 'Ac':
 			return 'Insurance? (Y/N) '
 		elif (self.dealer.get_faceup_card().card_face == 'Ac' and self.dealer.blackjack_check()) or \

@@ -13,8 +13,9 @@ def cal_score(score_base: list, card) -> list:
 	return list(set(out))
 
 class Hand():
-	def __init__(self, hand: list, freeze: bool = False):
+	def __init__(self, hand: list, freeze: bool = False, player = None):
 		self.hand = hand
+		self.player = player
 		self.freeze = freeze
 
 		self.score = hand[0].get_score()
@@ -23,14 +24,14 @@ class Hand():
 		self.action = 0
 		self.decision = []
 		self.insurance = False
+		self.child = []
 
 	def get_hand(self):
 		return [v.__str__() for v in self.hand]
 
-	# def add_card(self, card):
-	# 	self.hand.append(card)
-	# 	self.score = cal_score(self.score, card)
-	# 	self.action += 1
+	def child_process(self):
+		if len(self.child) != 0:
+			self.child.pop(0) if 'split' in self.decision else None
 
 	def hit(self, shoe):
 		card = shoe.hit()
@@ -61,9 +62,10 @@ class Hand():
 	def split(self, shoe):
 		if self.split_check():
 			freeze = self.freeze_check()
-			hand_1, hand_2 = Hand([self.hand[0], shoe.hit()], freeze = freeze), \
-			Hand([self.hand[-1], shoe.hit()], freeze = freeze)	
+			hand_1, hand_2 = Hand([self.hand[0], shoe.hit()], freeze = freeze, player = self.player), \
+			Hand([self.hand[-1], shoe.hit()], freeze = freeze, player  = self.player)	
 			self.action += 1
+			self.child += [hand_1, hand_2]
 			return hand_1, hand_2
 
 	def get_printable_score(self):

@@ -102,68 +102,75 @@ def strategy(faceup_card, hand, question: str) -> str:
 						return 'hit'
 
 class Bot(Player):
-	def __init__(self, bankroll):
-		super().__init__(bankroll)
+	def __init__(self, bankroll, name):
+		super().__init__(bankroll, name)
 		self.balance = bankroll
 
 	def play(self, faceup_card, hand, question):
 		return strategy(faceup_card, hand, question)
 
-bot = Bot(bankroll = 1000000)
+x_bot = Bot(bankroll = 1_000_000, name = 'X')
+y_bot = Bot(bankroll = 1_000_000, name = 'Y')
 config = Config() # Define your configuration game here. Check game_config.py for reference
 
-blackjack = Blackjack(config = config, player = [bot], shoe = Shoe(deck_quant = 8))
+blackjack = Blackjack(config = config, player = [x_bot, y_bot], shoe = Shoe(deck_quant = 8))
 
 game = blackjack.run()
 
 dealer_hand = game.dealer
-bot_hand = [game.players[0]]
-hands_complete = []
-hand_count = 0
-_count = 0
+bots = game.players
 
-while len(bot_hand) != 0:
-	hand_in_play = deepcopy(bot_hand[0])
-	hand_delete = False
-	
-	quest = game.question(hand_in_play, _count)
-	if hand_count != 0:
-		quest = 'Hand {} --- {}'.format(hand_count, quest)
+print('Dealer: {}'.format(dealer_hand.get_hand()))
 
-	print('Dealer: {}'.format(dealer_hand.get_hand()))
-	print('Bot Hand: {}'.format(hand_in_play.get_hand()))
-	print('Quest: {}'.format(quest))
-	while quest != None:
-		action = bot.play(faceup_card = game.dealer.get_faceup_card(), hand = hand_in_play, question = quest)
-		_count += 1
-		print(action)
+for bot_hand in bots: # Player-scanning Block
+	print('----------------------------------------------- \n\
+Bot {} Processing ......................................'.format(bot_hand.player.name))
+	hand_process = [bot_hand]
+	hand_count = 0
 
-		if action == 'x2':
-			hand_in_play.x2(blackjack.shoe)
-			print(hand_in_play.get_hand())
-		elif action == 'hit':
-			hand_in_play.hit(blackjack.shoe)
-			print(hand_in_play.get_hand())
-		elif action == 'stand':
-			hand_in_play.stand()
-		elif action == 'split':
-			hand_1, hand_2 = hand_in_play.split(blackjack.shoe)
-			bot_hand += [hand_1, hand_2]
-			hand_delete = True
-			break
+	while len(hand_process) != 0: # All-hands loop Block
+		hand_in_play = hand_process[0]
+		_count = 0
 
 		quest = game.question(hand_in_play, _count)
-		if quest != None:
-			print('Quest: {}'.format(quest))
+		if hand_count != 0:
+			quest = 'Hand {hand_count} --- {quest}'
 
-	bot_hand.pop(0)
-	if hand_delete == False:
-		hands_complete.append(hand_in_play)
+		
+		print('Bot Hand: {}'.format(hand_in_play.get_hand()))
+		print('⍰ Quest: {}'.format(quest))
+		while quest != None: # Response Block
+			# Bot action
+			action = hand_in_play.player.play(faceup_card = game.dealer.get_faceup_card(), hand = hand_in_play, question = quest)
+			_count += 1
+			print('--> {}'.format(action))
 
-	hand_count += 1
-	# sleep(10)
+			if action == 'x2':
+				hand_in_play.x2(blackjack.shoe)
+				print(hand_in_play.get_hand())
+			elif action == 'hit':
+				hand_in_play.hit(blackjack.shoe)
+				print(hand_in_play.get_hand())
+			elif action == 'stand':
+				hand_in_play.stand()
+			elif action == 'split':
+				hand_1, hand_2 = hand_in_play.split(blackjack.shoe)
+				hand_process += [hand_1, hand_2]
+				# hand_delete = True
+				break
 
-# This is a github test 
+			quest = game.question(hand_in_play, _count)
+			if quest != None:
+				print('Quest: {}'.format(quest))
+
+		hand_process.pop(0)
+		# if hand_delete == False:
+		# 	hands_complete.append(hand_in_play)
+
+		hand_count += 1
+		# sleep(10)
+
+	# This is a github test 
 
 
 
