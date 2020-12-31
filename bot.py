@@ -134,7 +134,7 @@ Bot {} Processing ......................................'.format(bot_hand.player
 
 		quest = game.question(hand_in_play, _count)
 		if hand_count != 0:
-			quest = 'Hand {hand_count} --- {quest}'
+			quest = 'Hand {} --- {}'.format(hand_count,quest)
 
 		
 		print('Bot Hand: {}'.format(hand_in_play.get_hand()))
