@@ -12,6 +12,25 @@ def cal_score(score_base: list, card) -> list:
 	out = [21] if 21 in out else out
 	return list(set(out))
 
+def hand_print(hand, player: bool = True, hand_num: int = 0, bj_check: bool = True) -> str:
+	if hand.score == [21] and len(hand.hand)==2 and bj_check == True:
+		score = 'Blackjack'
+	elif len(hand.score) == 0:
+		score = 'Busted'
+	else:
+		score = hand.get_printable_score()
+
+	if player and hand_num == 0:
+		substr = 'Your Hand'
+	elif player and hand_num != 0:
+		substr = 'Hand {}'.format(hand_num)
+	else:
+		substr = 'Dealer'
+	return '{}: {} ({})'.format(
+					substr, hand.get_hand(), score
+					)
+
+
 class Hand():
 	def __init__(self, hand: list, freeze: bool = False, player = None):
 		self.hand = hand
@@ -65,6 +84,7 @@ class Hand():
 			hand_1, hand_2 = Hand([self.hand[0], shoe.hit()], freeze = freeze, player = self.player), \
 			Hand([self.hand[-1], shoe.hit()], freeze = freeze, player  = self.player)	
 			self.action += 1
+			self.decision.append('split')
 			self.child += [hand_1, hand_2]
 			return hand_1, hand_2
 

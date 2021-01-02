@@ -5,6 +5,7 @@ class Blackjack():
 		self.config = config
 		self.player = player
 		self.shoe = shoe
+		self.logs = []
 
 	def add_player(self, player):
 		self.player.append(player)
@@ -14,6 +15,19 @@ class Blackjack():
 		return Round_play(dealer_hand = Dealer(hands[-1]), 
 			player_hand = [Hand(hand, player = player) for hand, player in zip(hands[:-1], self.player)])
 
+	def log(self, gameplay):
+		# names = [v.name for v in self.player]
+		# hands = [hand for hand in gameplay.players]
+
+		# self.logs.append({
+		# 	'dealer': gameplay.dealer,
+		# 	'player': [{
+		# 			'name': name,
+		# 			'hand': hand,
+		# 			} for name, hand in zip(names, hands)
+		# 		]
+		# 	})
+		self.logs.append(gameplay)
 
 class Round_play():
 	def __init__(self, dealer_hand, player_hand: list):
@@ -30,6 +44,51 @@ class Round_play():
 			return None 
 		else:
 			return 'What is your choice? (X2, Hit, Stand or Split) '
+
+	def get_hands(self, player_name: str = None):
+		self.hands = []
+		for player in self.players:
+			hand_process = [player]
+			while len(hand_process) != 0:
+				hand = hand_process[0]
+				if len(hand.child) == 0:
+					self.hands.append(hand)
+				else:
+					hand_process += hand.child
+				hand_process.pop(0)
+
+		if player_name:
+			return [v for v in self.hands if v.player.name == player_name]
+
+	def dealer_action(self, shoe):
+		self.get_hands()
+		if all([v.busted_check() for v in self.hands]) or all([v.blackjack_check() for v in self.hands]):
+			pass
+		else:
+			while self.dealer.get_max_score() < 17:
+				self.dealer.hit(shoe)
+
+	def process_result(self, hand, bet, log: bool = True):
+		if hand.blackjack_check():
+			if self.dealer.blackjack_check():
+				out = hand.player.tie(bet)
+			else:
+				out = hand.player.win(bet*1.5)
+		elif self.dealer.blackjack_check():
+			out = hand.player.lose(bet)
+		else:
+			dealer_score = self.dealer.get_max_score()
+			hand_score = hand.get_max_score()
+			if hand_score > 21:
+				out = hand.player.lose(bet)
+			elif (dealer_score > 21) or (dealer_score < hand_score):
+				out = hand.player.win(bet)
+			elif dealer_score > hand_score:
+				out = hand.player.lose(bet)
+			elif dealer_score == hand_score:
+				out = hand.player.tie(bet)
+
+		hand.result = out
 
 class Config():
 	def __init__(self, reset_shoe: float = 0.3, stand_on: str = 'soft 17', 
