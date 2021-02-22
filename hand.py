@@ -12,6 +12,7 @@ def cal_score(score_base: list, card) -> list:
 	out = [21] if 21 in out else out
 	return list(set(out))
 
+
 def hand_print(hand, player: bool = True, hand_num: int = 0, bj_check: bool = True) -> str:
 	if hand.score == [21] and len(hand.hand)==2 and bj_check == True:
 		score = 'Blackjack'

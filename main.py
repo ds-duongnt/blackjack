@@ -4,37 +4,17 @@ from copy import deepcopy
 
 from shoe import Shoe
 from game_config import Config
-from hand import Hand, Dealer
+from hand import Hand, Dealer, hand_print
 from player import Player
 
-def hand_print(hand, player: bool = True, hand_num: int = 0, bj_check: bool = True) -> str:
-	if hand.score == [21] and len(hand.hand)==2 and bj_check == True:
-		score = 'Blackjack'
-	elif len(hand.score) == 0:
-		score = 'Busted'
-	else:
-		score = hand.get_printable_score()
-
-	if player and hand_num == 0:
-		substr = 'Your Hand'
-	elif player and hand_num != 0:
-		substr = 'Hand {}'.format(hand_num)
-	else:
-		substr = 'Dealer'
-	return '{}: {} ({})'.format(
-					substr, hand.get_hand(), score
-					)
-
-def balance_print(player, result: str) -> float:
-	return 'You {}!!! \n Your balance: {} '.format(result, player.balance)
 
 # Implement the game
 def main():
 	con = input('Game start? (Y/N) ')
 	if con.lower() == 'y':
-		shoe = Shoe(deck_quant = 8)
 		config = Config() # Define your configuration game here. Check game_config.py for reference
-
+		shoe = Shoe(deck_quant = config.n_deck)
+		
 		card_quant = len(shoe.shoe) # Total cards in the shoe
 
 		bankroll = float(input('Money buy-in? '))

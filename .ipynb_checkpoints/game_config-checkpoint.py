@@ -91,10 +91,9 @@ class Round_play():
 		hand.result = out
 
 class Config():
-	def __init__(self, n_deck: int = 6, reset_shoe: float = 0.3, stand_on: str = 'soft 17', 
+	def __init__(self, reset_shoe: float = 0.3, stand_on: str = 'soft 17', 
 		split_rule: str = 'once', doub_aft_spl: bool = False):
 		
-		self.n_deck = n_deck
 		self.reset_shoe = reset_shoe
 		self.stand_on = stand_on
 		self.split_rule = split_rule

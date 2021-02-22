@@ -7,6 +7,7 @@ from hand import Hand, Dealer, hand_print
 from player import Player
 
 from time import sleep
+import pickle
 
 def strategy(faceup_card, hand, question: str) -> str:
 	if hand.freeze == False:
@@ -112,85 +113,95 @@ class Bot(Player):
 	def play(self, faceup_card, hand, question):
 		return strategy(faceup_card, hand, question)
 
-bet_amount = 1_000
-x_bot = Bot(bankroll = 1_000_000, name = 'X')
-y_bot = Bot(bankroll = 1_000_000, name = 'Y')
-config = Config() # Define your configuration game here. Check game_config.py for reference
+def main():
+	bet_amount = 1_000
+	x_bot = Bot(bankroll = 1_000_000, name = 'X')
+	y_bot = Bot(bankroll = 1_000_000, name = 'Y')
+	z_bot = Bot(bankroll = 1_000_000, name = 'Z')
+	a_bot = Bot(bankroll = 1_000_000, name = 'A')
+	b_bot = Bot(bankroll = 1_000_000, name = 'B')
+	c_bot = Bot(bankroll = 1_000_000, name = 'C')
 
-blackjack = Blackjack(config = config, player = [x_bot, y_bot], shoe = Shoe(deck_quant = 8))
-card_quant = len(blackjack.shoe.shoe) # Total cards in the shoe
+	config = Config() # Define your configuration game here. Check game_config.py for reference
 
-for i in range(1_000):
-	game = blackjack.run()
+	blackjack = Blackjack(config = config, player = [x_bot, y_bot, z_bot, a_bot, b_bot, c_bot], shoe = Shoe(deck_quant = config.n_deck))
+	card_quant = len(blackjack.shoe.shoe) # Total cards in the shoe
 
-	dealer_hand = game.dealer
-	bots = game.players
+	for i in range(1_000):
+		game = blackjack.run()
 
-	print('Dealer: [{} ; ? ]'.format(dealer_hand.get_faceup_card()))
+		dealer_hand = game.dealer
+		bots = game.players
 
-	for bot_hand in bots: # Player-scanning Block
-		print('----------------------------------------------- \n\
+		print('Dealer: [{} ; ? ]'.format(dealer_hand.get_faceup_card()))
+
+		for bot_hand in bots: # Player-scanning Block
+			print('----------------------------------------------- \n\
 Bot {} Processing ......................................'.format(bot_hand.player.name))
-		hand_process = [bot_hand]
-		hand_count = 0
+			hand_process = [bot_hand]
+			hand_count = 0
 
-		while len(hand_process) != 0: # All-hands loop Block
-			hand_in_play = hand_process[0]
-			_count = 0
-
-			quest = game.question(hand_in_play, _count)
-			if hand_count != 0:
-				quest = 'Hand {} --- {}'.format(hand_count,quest)
-
-			
-			print('Bot Hand: {}'.format(hand_in_play.get_hand()))
-			print('⍰ Quest: {}'.format(quest))
-			while quest != None: # Response Block
-				# Bot action
-				action = hand_in_play.player.play(faceup_card = game.dealer.get_faceup_card(), hand = hand_in_play, question = quest)
-				_count += 1
-				print('--> {}'.format(action))
-
-				if action == 'x2':
-					hand_in_play.x2(blackjack.shoe)
-					print(hand_in_play.get_hand())
-				elif action == 'hit':
-					hand_in_play.hit(blackjack.shoe)
-					print(hand_in_play.get_hand())
-				elif action == 'stand':
-					hand_in_play.stand()
-				elif action == 'split':
-					hand_1, hand_2 = hand_in_play.split(blackjack.shoe)
-					hand_process += [hand_1, hand_2]
-					# hand_delete = True
-					break
+			while len(hand_process) != 0: # All-hands loop Block
+				hand_in_play = hand_process[0]
+				_count = 0
 
 				quest = game.question(hand_in_play, _count)
-				if quest != None:
-					print('Quest: {}'.format(quest))
+				if hand_count != 0:
+					quest = 'Hand {} --- {}'.format(hand_count,quest)
 
-			hand_process.pop(0)
+				
+				print('Bot Hand: {}'.format(hand_in_play.get_hand()))
+				print('⍰ Quest: {}'.format(quest))
+				while quest != None: # Response Block
+					# Bot action
+					action = hand_in_play.player.play(faceup_card = game.dealer.get_faceup_card(), hand = hand_in_play, question = quest)
+					_count += 1
+					print('--> {}'.format(action))
 
-			hand_count += 1
+					if action == 'x2':
+						hand_in_play.x2(blackjack.shoe)
+						print(hand_in_play.get_hand())
+					elif action == 'hit':
+						hand_in_play.hit(blackjack.shoe)
+						print(hand_in_play.get_hand())
+					elif action == 'stand':
+						hand_in_play.stand()
+					elif action == 'split':
+						hand_1, hand_2 = hand_in_play.split(blackjack.shoe)
+						hand_process += [hand_1, hand_2]
+						# hand_delete = True
+						break
 
-	game.dealer_action(blackjack.shoe) 
-	print('-----------------------------------------------')
-	print(hand_print(dealer_hand, player=False))
+					quest = game.question(hand_in_play, _count)
+					if quest != None:
+						print('Quest: {}'.format(quest))
 
-	for bot_hand in bots: # Player-scanning Score block
-		print('Bot {} ------ Results: '.format(bot_hand.player.name))
-		hands = game.get_hands(player_name = bot_hand.player.name)
-		for hand in hands:
-			print(hand_print(hand))
-			game.process_result(hand, bet_amount)
+				hand_process.pop(0)
 
-	blackjack.log(game)
+				hand_count += 1
 
-	if len(blackjack.shoe.shoe) < int(card_quant*blackjack.config.reset_shoe):
-		blackjack.shoe.shuffle(reset=True)
-		print('----------------- Shuffle Time -----------------')
+		game.dealer_action(blackjack.shoe) 
+		print('-----------------------------------------------')
+		print(hand_print(dealer_hand, player=False))
 
+		for bot_hand in bots: # Player-scanning Score block
+			print('Bot {} ------ Results: '.format(bot_hand.player.name))
+			hands = game.get_hands(player_name = bot_hand.player.name)
+			for hand in hands:
+				print(hand_print(hand))
+				game.process_result(hand, bet_amount)
 
+		blackjack.log(game)
+
+		if len(blackjack.shoe.shoe) < int(card_quant*blackjack.config.reset_shoe):
+			blackjack.shoe.shuffle(reset=True)
+			print('----------------- Shuffle Time -----------------')
+
+	with open("log.txt", "wb") as fp:   #Pickling
+		pickle.dump(blackjack.logs, fp)
+
+if __name__ == '__main__':
+	main()
 
 
 
