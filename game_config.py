@@ -34,8 +34,8 @@ class Round_play():
 		self.dealer = dealer_hand
 		self.players = player_hand
 
-	def question(self, player_hand, count: int = 0) -> str:
-		if count == 0 and self.dealer.get_faceup_card().card_face == 'Ac':
+	def question(self, player_hand, count: int = 0, insurance_offer: bool = True) -> str:
+		if count == 0 and insurance_offer == True and self.dealer.get_faceup_card().card_face == 'Ac':
 			return 'Insurance? (Y/N) '
 		elif (self.dealer.get_faceup_card().card_face == 'Ac' and self.dealer.blackjack_check()) or \
 		player_hand.blackjack_check() or \
@@ -68,25 +68,25 @@ class Round_play():
 			while self.dealer.get_max_score() < 17:
 				self.dealer.hit(shoe)
 
-	def process_result(self, hand, bet, log: bool = True):
+	def process_result(self, hand, bet, log: bool = True, printout: bool = True):
 		if hand.blackjack_check():
 			if self.dealer.blackjack_check():
-				out = hand.player.tie(bet)
+				out = hand.player.tie(bet, printout = printout)
 			else:
-				out = hand.player.win(bet*1.5)
+				out = hand.player.win(bet*1.5, printout = printout)
 		elif self.dealer.blackjack_check():
-			out = hand.player.lose(bet)
+			out = hand.player.lose(bet, printout = printout)
 		else:
 			dealer_score = self.dealer.get_max_score()
 			hand_score = hand.get_max_score()
 			if hand_score > 21:
-				out = hand.player.lose(bet)
+				out = hand.player.lose(bet, printout = printout)
 			elif (dealer_score > 21) or (dealer_score < hand_score):
-				out = hand.player.win(bet)
+				out = hand.player.win(bet, printout = printout)
 			elif dealer_score > hand_score:
-				out = hand.player.lose(bet)
+				out = hand.player.lose(bet, printout = printout)
 			elif dealer_score == hand_score:
-				out = hand.player.tie(bet)
+				out = hand.player.tie(bet, printout = printout)
 
 		hand.result = out
 

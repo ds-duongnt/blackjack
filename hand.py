@@ -75,7 +75,7 @@ class Hand():
 		if self.action == 0:
 			card_1 = self.hand[0]
 			card_2 = self.hand[-1]
-			return True if card_1.card_face == card_2.card_face else False
+			return True if card_1.get_score() == card_2.get_score() else False
 		else:
 			return False
 
