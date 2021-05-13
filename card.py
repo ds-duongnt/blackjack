@@ -3,6 +3,7 @@ class Card:
         self.card = card
         self.card_face = card.split(':')[0]
         self.card_suit = card.split(':')[-1]
+        self.score = self.get_score()
 
     def get_score(self) -> list:
         try:
@@ -13,6 +14,7 @@ class Card:
             else:
                 score = [10]
 
+
         return score
 
     def low_card_check(self) -> bool:
@@ -20,6 +22,9 @@ class Card:
 
     def high_card_check(self) -> bool:
         return True if self.card_face in ['07','08','09','10','Ja','Qe','Ki','Ac'] else False
+
+    def is_ace(self) -> bool:
+        return True if self.card_face == 'Ac' else False
         
     def __str__(self):
         return self.card
@@ -40,4 +45,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

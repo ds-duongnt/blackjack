@@ -1,191 +1,228 @@
-# import numpy as np
-import random
-from copy import deepcopy
+from flask import Flask, render_template, request, redirect, jsonify, make_response
+from flask import request
 
+import random
+import jsons
 from shoe import Shoe
 from game_config import Config
 from hand import Hand, Dealer, hand_print
 from player import Player
 
+app = Flask(__name__)
 
-# Implement the game
-def main():
-	con = input('Game start? (Y/N) ')
-	if con.lower() == 'y':
-		config = Config() # Define your configuration game here. Check game_config.py for reference
-		shoe = Shoe(deck_quant = config.n_deck)
-		
-		card_quant = len(shoe.shoe) # Total cards in the shoe
+config = None
+shoe = None
+player = None
+bet_amt = 0
+player_hand = None
+dealer = None
 
-		bankroll = float(input('Money buy-in? '))
+def round_examine(player_hand, dealer_hand, insure_asked: bool = False) -> bool:
+	end = False
+	output = None
+	bet_mult = None
+	if dealer_hand.blackjack_check():
+		if dealer_hand.get_faceup_card().is_ace():
+			if insure_asked:
+				end = True
+				bet_mult = 1
+				output = 'push' if player_hand.blackjack_check() else 'lose'
 
-		player = Player(bankroll) # sign up Player
-		while player.balance > 0:
-			bet = float(input('----------------- Betting Time ----------------- '))
-			if bet <= player.balance:
-			
-				hands_deal = shoe.deal_card()
-		
-				dealer = Dealer(hands_deal[-1])
-				faceup_card = dealer.get_faceup_card()
-				facedown_card = dealer.get_facedown_card()
+		else:
+			end = True
+			bet_mult = 1
+			output = 'push' if player_hand.blackjack_check() else 'lose'
+	else:
+		if player_hand.blackjack_check():
+			end = True
+			bet_mult = 1.5
+			output = 'win'
+		elif player_hand.busted_check():
+			end = True
+			bet_mult = 1
+			output = 'lose'
+		elif 'stand' in player_hand.decision or 'x2' in player_hand.decision:
+			p_score = player_hand.get_max_score()
+			d_score = dealer_hand.get_max_score()
+			d_score = 0 if d_score == 22 else d_score
 
+			output = 'win' if p_score > d_score else 'push' if p_score == d_score else 'lose'
+			end = True
+			bet_mult = 2 if 'x2' in player_hand.decision else 1
 
-				dealer_print = 'Dealer: [{} ; ? ] ({})'.format(
-					faceup_card.__str__(), '/'.join([str(v) for v in faceup_card.get_score()])
-					)
-					
-				
-				player_hand = Hand(hands_deal[0])
-				print(dealer_print)
-				print(hand_print(player_hand))
+	return {
+	'round_ended': end,
+	'output': output,
+	'bet_mult': bet_mult
+	}
 
-				while True: # Round tracking
-					# Insurrance processing
-					if faceup_card.card_face == 'Ac':
-						insurrance = input('Insurance? (Y/N) ')
+def bankroll_update(player, round_examine, bet_amt):
+	if round_examine.get('round_ended'):
+		output = round_examine.get('output')
+		ratio = round_examine.get('bet_mult')
+		if output == 'win':
+			player.win(bet_amt*ratio)
+		elif output == 'lose':
+			player.lose(bet_amt*ratio)
+		elif output == 'push':
+			player.tie(bet_amt*ratio)
 
-						if insurrance.lower() == 'y': # Insurrance block
-							if dealer.blackjack_check():
-								player.win(bet, printout=False)
-							else:
-								player.lose(bet/2, printout=False)
+@app.route("/")
+def index():
+    return render_template('index.html')
 
-						if dealer.blackjack_check():
-							print('----------------------------------------------------')
-							if player_hand.blackjack_check(): # push on the main game
-								print(hand_print(dealer, player==False))
-								print(hand_print(player_hand))
-								player.tie(bet)
-							else:
-								print(hand_print(dealer, player==False))
-								print(hand_print(player_hand))
-								player.lose(bet)
+@app.route('/start', methods=['POST'])
+def start():
+	buyin = int(request.get_json())
 
-							break # End round
+	print('Buyin: %s' %buyin)
 
-					# Blackjack processing
-					if player_hand.blackjack_check():
-						print('----------------------------------------------------')
-						if dealer.blackjack_check():
-							print(hand_print(dealer, player==False))
-							print(hand_print(player_hand))
-							player.tie(bet)
-						else:
-							print(hand_print(dealer, player==False))
-							print(hand_print(player_hand))
-							player.win(bet*1.5)
+	global config, shoe, player
+	config = Config() #Define Game configuration/rules
+	shoe = Shoe(deck_quant = config.n_deck)
 
-						break # End round
+	# card_quant = len(shoe.shoe)
 
-					else: # Player starts making decisions
-								
-						hands = [player_hand]
-						choice_question = 'What is your choice? (X2, Hit, Stand or Split) '
-						hands_complete = []
+	player = Player(buyin)
 
-						hand_count = 0
-						while len(hands) != 0: # Keep playing for all hands you have
-							if hand_count != 0:
-								choice_question = 'Hand {} --- What is your choice? (X2, Hit, Stand or Split) '.format(hand_count)
-							hand_in_play = deepcopy(hands[0])
-							hand_delete = False
-							# Player making decisions
-							while hand_in_play.get_printable_score() not in ['21',''] and hand_in_play.freeze == False: # Player stops making decisions if the hand is either Bj, 21 or Busted
+	data_res = jsons.loads((jsons.dumps({
+	'config': config,
+	'shoe': shoe,
+	'player': player
+	})))
 
-								choice = input(choice_question)
+	res = make_response(jsonify(data_res), 200)
 
-								if choice.lower() == 'x2' and hand_in_play.action == 0 and player_hand.action == 0: # Switch to play_in_hand if you allow x2 after splitting
-									if bet*2 <= player.balance:
-										bet = bet*2
-										hand_in_play.x2(shoe)
-										break # End decision block
-									else:
-										print('Your balance is too low')	
-								elif choice.lower() == 'hit':
-									hand_in_play.hit(shoe)
-									print(dealer_print)
-									print(hand_print(hand_in_play))
-								elif choice.lower() == 'stand':
-									hand_in_play.stand()
-									break # End decision block
-								elif choice.lower() == 'split' and player_hand.split_check() == True: # Switch to play_in_hand if you allow to split multiple times
-									if player.balance >= bet*2:
-										hand_1, hand_2 = player_hand.split(shoe)
-										print(hand_print(hand_1, hand_num = 1, bj_check = False))
-										print(hand_print(hand_2, hand_num = 2, bj_check = False))
-										hands += [hand_1, hand_2]
-										hand_delete = True
-										break # End decision block
-									else:
-										print('Your balance is too low')
-								else:	
-									print('You cannot {}'.format(choice.title()))
+	return res
+	
+@app.route("/deal", methods=["POST"])
+def deal():
+	if request.method == 'POST':
+		global bet_amt
+		bet_amt= request.get_json()
 
-							hands.pop(0) # delete the current hand
+		hands_deal = shoe.deal_card()
 
-							if hand_delete == False:
-								hands_complete.append(hand_in_play)
+		global player_hand, dealer
+		dealer = Dealer(hands_deal[-1])
+		player_hand = Hand(hands_deal[0])
+		player_hand.Betting = bet_amt
 
-							hand_count += 1
+		output = round_examine(player_hand, dealer)
 
-							print('----------------------------------------------------')
+		print('bet amt: %s' %bet_amt)
+		print ({
+			'dealer': dealer.get_hand(),
+			'player': player_hand.get_hand(),
+			})
 
-						# # Handling results after decisions making
-						# for hand_played in hands_complete:
-						# 	if hand_played.busted_check(): # If you busted, you lose right away
-						# 		# print(hand_print(dealer, player==False))
-						# 		print(hand_print(hand_played))
-								
+		print('Round Examine: %s' %output)
 
-						if all([v.busted_check() for v in hands_complete]) or dealer.blackjack_check():
-							print(hand_print(dealer, player=False))
-							player.lose(bet*len(hands_complete))
-								
-							break # End round
+		bankroll_update(player, output, bet_amt)
 
-						else:
-							while dealer.get_max_score() < 17: # Dealer takes actions
-								dealer.hit(shoe)
+		data_res = jsons.loads(jsons.dumps({
+		'player': player,
+		'dealer': dealer,
+		'player_hand': player_hand,
+		'Betting': bet_amt
+		}))
 
-							dealer_score = dealer.get_max_score() # Dealer's score
-							for hand_played in hands_complete:
+		data_res.update(output)
 
-								player_score = hand_played.get_max_score()
+		res = make_response(jsonify(data_res), 200)
 
-								print(hand_print(dealer, player==False))
-								if player_score > 21:
-									print(hand_print(hand_played))
-									player.lose(bet)
-
-								elif (dealer_score > 21) or (dealer_score < player_score): 
-									
-									# print(hand_print(dealer, player==False))
-									print(hand_print(hand_played, bj_check = False))
-									player.win(bet)
-				
-								elif dealer_score > player_score:
-									
-									# print(hand_print(dealer, player==False))
-									print(hand_print(hand_played, bj_check = False))
-									player.lose(bet)
-				
-								elif dealer_score == player_score:
-
-									# print(hand_print(dealer, player==False))
-									print(hand_print(hand_played, bj_check = False))
-									player.tie(bet)
-
-							break # End round
-					
-
-			else:
-				print('Betting money exceeds your bankroll')
-
-			if len(shoe.shoe) < int(card_quant*config.reset_shoe):
-				shoe.shuffle(reset=True)
-				print('----------------- Shuffle Time -----------------')
+		return res
 
 
-if __name__ == '__main__':
-	main()
+@app.route("/hit", methods=["GET"])
+def hit():
+	player_hand.hit(shoe)
+
+	print('---> Hitting: %s' %player_hand.get_hand())
+
+	output = round_examine(player_hand, dealer)
+	bankroll_update(player, output, bet_amt)
+
+	data_res = jsons.loads(jsons.dumps({
+		'player': player,
+		'player_hand': player_hand
+		}))
+
+	data_res.update(output)
+
+	res = make_response(jsonify(data_res), 200)
+	return res
+
+
+@app.route("/stand", methods=["GET"])
+def stand():
+	player_hand.stand()
+
+	print('---> Standing')
+
+	while dealer.get_max_score() < 17: #Dealer takes action
+		dealer.hit(shoe)
+
+	output = round_examine(player_hand, dealer)
+	bankroll_update(player, output, bet_amt)
+
+	data_res = jsons.loads(jsons.dumps({
+		'player': player,
+		'dealer': dealer,
+		}))
+
+	data_res.update(output)
+
+	res = make_response(jsonify(data_res), 200)
+	return res
+
+
+@app.route("/double", methods=["GET"])
+def double():
+	player_hand.x2(shoe)
+
+	print('---> Doubling: %s' %player_hand.get_hand())
+
+	if not player_hand.busted_check():
+		while dealer.get_max_score() < 17: #Dealer takes action
+			dealer.hit(shoe)
+
+	print('Dealer: %s' %dealer.get_hand())
+	output = round_examine(player_hand, dealer)
+	bankroll_update(player, output, bet_amt)
+
+	data_res = jsons.loads(jsons.dumps({
+		'player': player,
+		'dealer': dealer,
+		'player_hand': player_hand
+		}))
+
+	data_res.update(output)
+
+	res = make_response(jsonify(data_res), 200)
+	return res
+
+
+@app.route("/insure", methods=["GET"])
+def insure():
+	dealer_bj = dealer.blackjack_check()
+
+	player.Insure_output = 'win' if dealer_bj else 'lose'
+	if not dealer_bj:
+		player.lose(bet_amt/2, printout=False)
+
+	output = round_examine(player_hand, dealer, insure_asked = True)
+	bankroll_update(player, output, bet_amt)
+
+	data_res = jsons.loads(jsons.dumps({
+		'player': player
+		}))
+
+	print('---> Insure: %s' %dealer_bj)
+	data_res.update(output)
+
+	res = make_response(jsonify(data_res), 200)
+	return res
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=8080, debug=True)

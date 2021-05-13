@@ -14,7 +14,7 @@ def deck_gen():
 	return out
 
 class Shoe:
-	def __init__(self, deck_quant: int = 6):
+	def __init__(self, deck_quant: int = 8):
 		self.deck_quant = deck_quant
 		self.deck = deck_gen()
 		self.shoe = self.deck * self.deck_quant
@@ -44,10 +44,3 @@ class Shoe:
 				out[hand].append(self.hit())
 
 		return out
-
-
-
-	
-
-
-

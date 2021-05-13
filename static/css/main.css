@@ -1,0 +1,507 @@
+body {
+  display: flex;
+  padding: 0;
+  margin: 0;
+  background: #f2f6e9;
+}
+
+
+.main {
+    /*border: 5px solid red;*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('../images/elements/table.png');
+    background-size: cover;
+    background-position: center;
+    width: 960px;
+    height: 763px;
+    margin: auto;
+    position: relative;
+
+    /*filter: 0;*/
+}
+
+#guideline {
+  position: absolute;
+  top: 47.5%;
+  left: 49.9%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0, 0.4); /* Black w/opacity/see-through */
+  border: 3px solid lightblue;
+  /*border: none;*/
+  border-radius: 100px;
+  padding: 20px;
+  height: 102px;
+  width: 102px;
+}
+
+#guideline:hover {
+  background-color: #27540D;
+  /*color: black;*/
+}
+
+.modal-body > span > em {
+  font-size: 13px;
+}
+
+.top-corner {
+  color: red;
+}
+
+
+.save-btn {
+  margin-top: 10px;
+  margin-left: auto;
+}
+
+.header {
+  margin-right: auto;
+  color: rgba(255,255,255,0.75);
+  font-family: sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  position: absolute;
+  left: 10px;
+  margin-top: 5px;
+}
+
+.btn_rule {
+  margin-top: 10px;
+}
+
+.table-bjpays {
+  /*border: 1px solid blue;*/
+  background-image: url('../images/elements/bjpays.png');
+  background-size: cover;
+  position: absolute;
+  height: 72px;
+  width: 578px;
+  top: 100px;
+}
+
+.table-soft17 {
+  background-image: url('../images/elements/soft17.png');
+  background-size: cover;
+  position: absolute;
+  height: 68px;
+  width: 697px;
+  top: 230px;
+}
+
+/*chipoffset block*/
+.chipoffset {
+/*  border: 1px solid blue;*/
+  position: absolute;
+  display: flex;
+  top: 530px;
+  left: 5px;
+  height: 100px;
+  width: 100px;
+}
+
+.chip0 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -300px 0;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+  top: 28px;
+  left: 5px;
+}
+
+.chip1 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -350px 0;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+  top: 57px;
+  left: 52px;
+}
+
+.chip2 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -400px 0;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+  top: 82px;
+  left: 103px;
+}
+
+.chip3 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -450px 0;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+  top: 103px;
+  left: 155px;
+}
+
+.arrowR {
+  background-image: url('../images/elements/arrow.png');
+  background-position: -23px 0;
+  width: 32px;
+  height: 25px;
+  position: absolute;
+  top: 128px;
+  left: 203px;
+}
+
+.arrowL {
+  background-image: url('../images/elements/arrow.png');
+  background-position: 0 0;
+  width: 23px;
+  height: 32px;
+}
+
+/*chip-stack block*/
+.chip_5 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -300px;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+}
+
+.chip_25 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -350px;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+}
+
+.chip_100 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -400px;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+}
+
+.chip_500 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -450px;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+}
+
+.chip_1000 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -500px;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+}
+
+.chip_5000 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -550px;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+}
+
+.chip_25000 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -600px;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+}
+
+.chip_100000 {
+  background-image: url('../images/elements/chip.png');
+  background-position: -650px;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+}
+
+.chip-label {
+  /*border: 1px solid darkblue;*/
+  width: 50px;
+  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+}
+
+.chip-label > span {
+  background: #000;
+  background-color: rgba(0,0,0,0.5);
+  border: 1px solid;
+  border-radius: 6px;
+  color: #fff;
+  font-family: sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 4px 1px 4px;
+  /*width: auto;*/
+}
+
+.bankroll-stack {
+  /*border: 1px solid red;*/
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 170px;
+  top: 515px;
+}
+
+.hand-slider {
+  height: 45px;
+  width: 50px;
+  position: absolute;
+  left: 170px;
+  top: 515px;
+}
+
+
+.insure-stack {
+  /*border: 1px solid red;*/
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 400px;
+  top: 250px;
+}
+
+.bet-stack {
+  /*border: 1px solid red;*/
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 453px;
+  top: 355px;
+}
+
+/*btn-block*/
+.game-btn {
+  position: absolute;
+  display: flex;
+  top: 580px;
+}
+
+.btn-form {
+  background: none;
+  border: none;
+}
+
+.btn-deal {
+  background-image: url('../images/elements/button.png');
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  top: 85px;
+  left: -140px;
+}
+
+.btn-clear {
+  background-image: url('../images/elements/button.png');
+  background-position: -90px 0;
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  top: 90px;
+  left: -40px;
+}
+
+.btn-stand {
+  background-image: url('../images/elements/button.png');
+  background-position: -180px 0;
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  top: 85px;
+  left: -140px;
+}
+
+.btn-hit {
+  background-image: url('../images/elements/button.png');
+  background-position: -270px 0;
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  top: 90px;
+  left: -40px;
+}
+
+.btn-double {
+  background-image: url('../images/elements/button.png');
+  background-position: -360px 0;
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  top: 85px;
+  left: 60px;
+}
+
+.btn-split {
+  background-image: url('../images/elements/button.png');
+  background-position: -450px 0;
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  top: 70px;
+  left: 160px;
+}
+
+.btn-insure {
+  background-image: url('../images/elements/button.png');
+  background-position: -540px 0;
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  top: 5px;
+  left: 360px;
+}
+
+.btn-newhand {
+  background-image: url('../images/elements/button.png');
+  background-position: -720px 0;
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  top: 70px;
+  left:-240px;
+}
+
+.btn-repeat {
+  background-image: url('../images/elements/button.png');
+  background-position: -810px 0;
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  top: 85px;
+  left: -140px;
+}
+
+.btn-repeat-deal {
+  background-image: url('../images/elements/button.png');
+  background-position: -900px 0;
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  top: 90px;
+  left: -40px;
+}
+
+/*DEALER BLOCK*/
+.dealer-hand {
+  /*border: 1px solid blue;*/
+  display: flex;
+  position:absolute;
+  top: 2%;
+  left: 45%;
+}
+
+/*PLAYER BLOCK*/
+.player-hand {
+  /*border: 1px solid red;*/
+  display: flex;
+  position: absolute;
+  top: 65%;
+  left: 45%;
+}
+
+.score-label {
+  margin-top: 95px;
+  width: 50px;
+/*  display: flex;
+  justify-content: center;*/
+  padding-left: 10px;
+}
+
+.score-label > span {
+  background: #000;
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 6px;
+  color: #fff;
+  font-family: sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 4px 10px;
+  /*width: auto;*/
+}
+/*CARDS BLOCK*/
+.cardgame {
+  background-image: url('../images/elements/deck.png');
+  position: absolute;
+  height: 94px;
+  width: 67px;
+}
+
+.card-double
+{
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+
+.card-02c              { background-position:0     0px; }
+.card-03c            { background-position:0   -94px; }
+.card-04c              { background-position:0  -188px; }
+.card-05c              { background-position:0  -282px; }
+.card-06c            { background-position:0  -376px; }
+.card-07c              { background-position:0  -470px; }
+.card-08c              { background-position:0  -564px; }
+.card-09c              { background-position:0  -658px; }
+.card-10c              { background-position:0  -752px; }
+.card-jc              { background-position:0  -846px; }
+.card-qc             { background-position:0  -940px; }
+.card-kc             { background-position:0 -1034px; }
+.card-01c             { background-position:0 -1128px; }
+.card-02d             { background-position:0 -1222px; }
+.card-03d            { background-position:0 -1316px; }
+.card-04d            { background-position:0 -1410px; }
+.card-05d             { background-position:0 -1504px; }
+.card-06d             { background-position:0 -1598px; }
+.card-07d             { background-position:0 -1692px; }
+.card-08d             { background-position:0 -1786px; }
+.card-09d             { background-position:0 -1880px; }
+.card-10d             { background-position:0 -1974px; }
+.card-jd             { background-position:0 -2068px; }
+.card-qd             { background-position:0 -2162px; }
+.card-kd             { background-position:0 -2256px; }
+.card-01d             { background-position:0 -2350px; }
+.card-02h             { background-position:0 -2444px; }
+.card-03h            { background-position:0 -2538px; }
+.card-04h             { background-position:0 -2632px; }
+.card-05h             { background-position:0 -2726px; }
+.card-06h             { background-position:0 -2820px; }
+.card-07h             { background-position:0 -2914px; }
+.card-08h             { background-position:0 -3008px; }
+.card-09h             { background-position:0 -3102px; }
+.card-10h             { background-position:0 -3196px; }
+.card-jh             { background-position:0 -3290px; }
+.card-qh             { background-position:0 -3384px; }
+.card-kh             { background-position:0 -3478px; }
+.card-01h             { background-position:0 -3572px; }
+.card-02s             { background-position:0 -3666px; }
+.card-03s             { background-position:0 -3760px; }
+.card-04s             { background-position:0 -3854px; }
+.card-05s             { background-position:0 -3948px; }
+.card-06s             { background-position:0 -4042px; }
+.card-07s             { background-position:0 -4136px; }
+.card-08s             { background-position:0 -4230px; }
+.card-09s             { background-position:0 -4324px; }
+.card-10s             { background-position:0 -4418px; }
+.card-js            { background-position:0 -4512px; }
+.card-qs             { background-position:0 -4606px; }
+.card-ks             { background-position:0 -4700px; }
+.card-01s             { background-position:0 -4794px; }
+.card-back           { background-position:0 -5358px; }
+
+
+
+

@@ -45,6 +45,7 @@ class Hand():
 		self.decision = []
 		self.insurance = False
 		self.child = []
+		self.spl_check = self.split_check()
 
 	def get_hand(self):
 		return [v.__str__() for v in self.hand]
@@ -116,6 +117,7 @@ class Hand():
 class Dealer(Hand):
 	def __init__(self, hand: list):
 		super().__init__(hand)
+		self.insur_offer = self.offer_insurance()
 
 	def get_faceup_card(self):
 		return self.hand[0]
@@ -123,3 +125,7 @@ class Dealer(Hand):
 	def get_facedown_card(self):
 		return self.hand[-1]
 
+	def offer_insurance(self):
+		return self.get_faceup_card().is_ace()
+
+# print(Hand([Card('02:H'), Card('05:C')]).split_check)

@@ -1,0 +1,155 @@
+body {
+    padding: 0;
+    margin: 0;
+    background: #f2f6e9;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('../static/images/elements/table.png');
+    background-size: cover;
+    background-position: center;
+    width: 960px;
+    margin: auto;
+    position: relative;
+}
+
+.header {
+  margin-right: auto;
+  color: rgba(255,255,255,0.75);
+  font-family: sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  position: absolute;
+  left: 10px;
+  margin-top: 5px;
+}
+
+.btn_rule {
+  margin-top: 10px;
+}
+
+.table-bjpays {
+  background-image: url('../static/images/elements/bjpays.png');
+  background-size: cover;
+  position: absolute;
+  height: 72px;
+  width: 578px;
+  top: 100px;
+}
+
+.table-soft17 {
+  background-image: url('../static/images/elements/soft17.png');
+  background-size: cover;
+  position: absolute;
+  height: 68px;
+  width: 697px;
+  top: 230px;
+}
+
+.chip0 {
+  background-image: url('../static/images/elements/chip.png');
+  background-position: -300px 0;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+  top: 560px;
+  left: 7px;
+}
+
+.chip1 {
+  background-image: url('../static/images/elements/chip.png');
+  background-position: -350px 0;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+  top: 590px;
+  left: 55px;
+}
+
+.chip2 {
+  background-image: url('../static/images/elements/chip.png');
+  background-position: -400px 0;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+  top: 615px;
+  left: 108px;
+}
+
+.chip3 {
+  background-image: url('../static/images/elements/chip.png');
+  background-position: -450px 0;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+  top: 635px;
+  left: 162px;
+}
+
+
+.chip_5000 {
+  background-image: url('../static/images/elements/chip.png');
+  background-position: -550px;
+  height: 45px;
+  width: 50px;
+  position: absolute;
+}
+
+.chip_label {
+  position: absolute;
+  top: 52px;
+  margin-top: -5px;
+}
+
+.chip_label > span {
+  background: #000;
+  background-color: rgba(0,0,0,0.5);
+  border: 1px solid;
+  border-radius: 6px;
+  color: #fff;
+  font-family: sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 4px 1px 4px;
+  width: auto;
+}
+
+.bankroll-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 170px;
+  top: 515px;
+}
+
+.arrowR {
+  background-image: url('../static/images/elements/arrow.png');
+  background-position: -23px 0;
+  position: absolute;
+  width: 32px;
+  height: 25px;
+  top: 660px;
+  left: 215px;
+}
+
+.arrowL {
+  background-image: url('../static/images/elements/arrow.png');
+  background-position: 0 0;
+  position: absolute;
+  width: 23px;
+  height: 32px;
+  top: 530px;
+  left: 5px;
+}
+
+}
+.btn_deal {
+  background-image: url('../static/images/elements/button.png');
+  position: absolute;
+  width: 90px;
+  height: 90px;
+}
