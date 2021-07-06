@@ -1,5 +1,6 @@
 var Game =
 {
+  State: 0,
   ChipOffset: 6,
   ChipList: [5, 25, 100, 500, 1000, 5000, 25000, 100000],
   round_ended: false,
@@ -14,11 +15,13 @@ var Game =
   Reset: function()
   {
     Game.round_ended = false;
+    Game.State = 0;
   },
 
   Start: function()
   {
     Game.Initialize();
+    Game.NewHand();
     Obj.Guideline.style.display ='none';
     Obj.Header.style.display = 'block';
     Obj.ChipOffset.style.display = 'block';
@@ -27,7 +30,7 @@ var Game =
     // Send data to server
     Player.Bankroll.SetStack(parseInt(buyin.value));
     sendData('/start', buyin.value, Game)
-    Obj.BankrollStack.innerHTML = ChipStackHTML(buyin.value)
+    // Obj.BankrollStack.innerHTML = ChipStackHTML(buyin.value)
   },
 
   AdjustChips: function(n)
@@ -52,52 +55,58 @@ var Game =
   // betchip
   BetChip: function(chip, index=true)
   {
-    Game.NewHand();
-
-    var bet_amt
-    if (index) {
-      var chip_amount = Game.ChipList[Game.ChipOffset - 6 + chip];
-      bet_amt = chip_amount;
-    }
-    else {
-      bet_amt = chip;
-    }
-    
-    if (Player.Bankroll.Amount < chip_amount)
-    {
-      bet_amt = Player.Bankroll.Amount;
-      // Obj.BankrollStack.Hide();
+    if (Game.round_ended) {
+      Game.NewHand();
     }
 
-    Player.Bankroll.Decrease(bet_amt);
-
-    var delay = 0;
-    var speed = 250;
-    // var stack = Player.Handstack[0].Stack;
-    var slider = Player.Handstack[0].Slider;
-    var hand_x = Player.Handstack[0].Left;
-    var hand_y = Player.Handstack[0].Top;
-    var bankroll_x = Player.Bankroll.Left;
-    var bankroll_y = Player.Bankroll.Top;
-
-    slider.MoveTo(bankroll_x, bankroll_y);
-    slider.innerHTML = ChipStackHTML(bet_amt);
-
-    delay = slider.Slide(bankroll_x, bankroll_y, hand_x, hand_y, 100, speed, delay);
-
-    delay += 100;
-    setTimeout(
-      function()
+    if (Game.State==0) {
+      // Game.NewHand();
+      Game.DisableButton();
+      var bet_amt
+      if (index) {
+        var chip_amount = Game.ChipList[Game.ChipOffset - 6 + chip];
+        bet_amt = chip_amount;
+      }
+      else {
+        bet_amt = chip;
+      }
+      
+      if (Player.Bankroll.Amount < chip_amount)
       {
-        slider.innerHTML = '';
-        Player.Handstack[0].Increase(bet_amt);
-        Obj.Button.Deal.Show();
-        Obj.Button.Clear.Show();
-        Obj.HandStack.Show();
-      },
-    delay)
+        bet_amt = Player.Bankroll.Amount;
+        // Obj.BankrollStack.Hide();
+      }
 
-    return delay;
+      Player.Bankroll.Decrease(bet_amt);
+
+      var delay = 0;
+      var speed = 250;
+      // var stack = Player.Handstack[0].Stack;
+      var slider = Player.Handstack[0].Slider;
+      var hand_x = Player.Handstack[0].Left;
+      var hand_y = Player.Handstack[0].Top;
+      var bankroll_x = Player.Bankroll.Left;
+      var bankroll_y = Player.Bankroll.Top;
+
+      slider.MoveTo(bankroll_x, bankroll_y);
+      slider.innerHTML = ChipStackHTML(bet_amt);
+
+      delay = slider.Slide(bankroll_x, bankroll_y, hand_x, hand_y, 100, speed, delay);
+
+      delay += 100;
+      setTimeout(
+        function()
+        {
+          slider.innerHTML = '';
+          Player.Handstack[0].Increase(bet_amt);
+          Obj.Button.Deal.Show();
+          Obj.Button.Clear.Show();
+          Obj.HandStack.Show();
+        },
+      delay)
+
+      return delay;
+    }
   },
 
   // DisableButton
@@ -118,9 +127,18 @@ var Game =
   // NewHand EnableButton
   NewRoundEnableButton: function()
   {
-    Obj.Button.Newhand.Show();
-    Obj.Button.Repeat.Show();
-    Obj.Button.RepeatDeal.Show();
+    if (Player.Bankroll.Amount==0) {
+      Game.round_ended = false;
+      Obj.Guideline.innerHTML = 'New Game';
+      Obj.Guideline.style = 'block';
+    }
+    else {
+      Obj.Button.Newhand.Show();
+      Obj.Button.Repeat.Show();
+      Obj.Button.RepeatDeal.Show();
+      Game.State = 0;
+    }
+   
   },
 
   // Clear Button
@@ -161,6 +179,8 @@ var Game =
   // Deal Button
   Deal: async function(bet_amt)
   {
+    $('.btn-popup').popover('disable');
+    Game.State += 1;
     Game.DisableButton();
 
     var res = await sendData('/deal', bet_amt, Game);
@@ -264,7 +284,7 @@ var Game =
     },
     delay);
 
-    Game.output == 'win' ? delay += 1200 : delay += 700;
+    Game.output == 'win' ? delay += 1500 : delay += 700;
     setTimeout(function() {
         Player.Handstack[0] = new ChipStack(Obj.HandStack, Obj.HandSlider, 453, 355);
         Player.InsureStack = new ChipStack(Obj.InsureStack, Obj.InsureSlider, 400, 250);
@@ -310,7 +330,10 @@ var Game =
     Game.NewHand();
 
     var speed = 250;
-    var delay = Game.BetChip(Player.Lastbet, false);
+    var bet_amt;
+    bet_amt = Player.Lastbet < Player.Bankroll.Amount ? Player.Lastbet : Player.Bankroll.Amount;
+
+    var delay = Game.BetChip(bet_amt, false);
 
     if (!deal) {
       setTimeout(function()

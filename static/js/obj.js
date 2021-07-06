@@ -78,7 +78,13 @@ var Obj =
 
     // PlayerHand
     Obj.PlayerHand[0] = document.getElementById('player-hand-0');
-    Obj.PlayerScoreLabel[0] = document.getElementById('score-label');
+    Obj.PlayerScoreLabel[0] = document.getElementById('score-label-0');
+
+    Obj.PlayerHand[1] = document.getElementById('player-hand-1');
+    Obj.PlayerScoreLabel[1] = document.getElementById('score-label-1');
+
+    Obj.PlayerHand[2] = document.getElementById('player-hand-2');
+    Obj.PlayerScoreLabel[2] = document.getElementById('score-label-2');
   }
 
 };

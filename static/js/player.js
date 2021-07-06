@@ -34,7 +34,9 @@ var Player =
 		Player.Maxscore = null;
 		Player.split_check = null;
 
-		Obj.PlayerHand[0].innerHTML = "<div id='score-label' class='score-label' style='display: none'></div>";
+		Obj.PlayerHand[0].innerHTML = "<div id='score-label-0' class='score-label' style='display: none'></div>";
+		Obj.PlayerHand[1].innerHTML = "<div id='score-label-1' class='score-label' style='display: none'></div>";
+		Obj.PlayerHand[2].innerHTML = "<div id='score-label-2' class='score-label' style='display: none'></div>";
 	},
 
 	UpdateScore: function()
@@ -97,11 +99,15 @@ var Player =
 
 			var res = await getData('/hit', Game);
 			$.extend(Player, Game.player_hand);
+			$.extend(Dealer, Game.dealer);
 
-			var hitting_card = Player.hand[Player.hand.length-1]
-			var delay = Game.DealPlayer(hitting_card, 0, false);
+			if (Player.hand.length > 2) {
+				var hitting_card = Player.hand[Player.hand.length-1]
+				var delay = Game.DealPlayer(hitting_card, 0, false);
 
-			delay += 250;
+				delay += 250;
+			}
+
 			if (Game.round_ended) {
 				setTimeout(function()
 				{
@@ -146,14 +152,16 @@ var Player =
 			$.extend(Dealer, Game.dealer);
 
 			var delay = 0
-			delay += StackSlide(from_obj = this.Bankroll, 
-				to_obj = this.Handstack[0], 
-				amt = this.Betting);
+			if (Player.hand.length > 2) {
+				delay += StackSlide(from_obj = this.Bankroll, 
+					to_obj = this.Handstack[0], 
+					amt = this.Betting);
 
-			var doubling_card = Player.hand[Player.hand.length-1]
-			delay = Game.DealPlayer(doubling_card, delay);
+				var doubling_card = Player.hand[Player.hand.length-1]
+				delay = Game.DealPlayer(doubling_card, delay);
 
-			delay += 250;
+				delay += 250;
+			}
 
 			setTimeout(function()
 			{
@@ -163,10 +171,22 @@ var Player =
 		}
 	},
 
-	Split: function()
+	Split: async function()
 	{
-		$('.btn-split').popover('enable');
-		$('.btn-split').popover('show');
+		if (Player.Bankroll.Amount < Player.Betting) {
+			$('.btn-split').popover('enable');
+			$('.btn-split').popover('show');
+		}
+		else {
+			Game.DisableButton();
+
+			var res = await getData('/split', Game);
+			$.extend(Player, Game.player_hand);
+			$.extend(Dealer, Game.dealer)
+
+			var delay = 0;
+
+		}
 	}
 
 }

@@ -92,13 +92,20 @@ body {
 
 /*chipoffset block*/
 .chipoffset {
-/*  border: 1px solid blue;*/
+  /*border: 1px solid blue;*/
   position: absolute;
   display: flex;
   top: 530px;
   left: 5px;
   height: 100px;
   width: 100px;
+}
+
+.chipshadow {
+  background-image: url('../images/elements/chipshadow.png');
+  height: 55px;
+  width: 60px;
+  position: absolute;
 }
 
 .chip0 {
@@ -111,6 +118,11 @@ body {
   left: 5px;
 }
 
+.sd0 {
+  top: 25px;
+  left: 2px;
+}
+
 .chip1 {
   background-image: url('../images/elements/chip.png');
   background-position: -350px 0;
@@ -119,6 +131,11 @@ body {
   position: absolute;
   top: 57px;
   left: 52px;
+}
+
+.sd1 {
+  top: 54px;
+  left: 49px;
 }
 
 .chip2 {
@@ -131,6 +148,11 @@ body {
   left: 103px;
 }
 
+.sd2{
+  top: 79px;
+  left: 100px;
+}
+
 .chip3 {
   background-image: url('../images/elements/chip.png');
   background-position: -450px 0;
@@ -139,6 +161,11 @@ body {
   position: absolute;
   top: 103px;
   left: 155px;
+}
+
+.sd3 {
+  top: 100px;
+  left: 152px;
 }
 
 .arrowR {
@@ -370,8 +397,8 @@ body {
   position: absolute;
   width: 90px;
   height: 90px;
-  top: 70px;
-  left:-240px;
+  top: 85px;
+  left: -140px;
 }
 
 .btn-repeat {
@@ -380,8 +407,8 @@ body {
   position: absolute;
   width: 90px;
   height: 90px;
-  top: 85px;
-  left: -140px;
+  top: 90px;
+  left: -40px;
 }
 
 .btn-repeat-deal {
@@ -390,8 +417,8 @@ body {
   position: absolute;
   width: 90px;
   height: 90px;
-  top: 90px;
-  left: -40px;
+  top: 85px;
+  left: 60px;
 }
 
 /*DEALER BLOCK*/
@@ -405,11 +432,24 @@ body {
 
 /*PLAYER BLOCK*/
 .player-hand {
-  /*border: 1px solid red;*/
+  border: 1px solid red;
   display: flex;
   position: absolute;
+}
+
+.p0 {
   top: 65%;
   left: 45%;
+}
+
+.p1 {
+  top: 60%;
+  left: 35%;
+}
+
+.p2 {
+  top: 60%;
+  left: 55%;
 }
 
 .score-label {

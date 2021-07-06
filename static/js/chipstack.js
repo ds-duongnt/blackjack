@@ -14,24 +14,29 @@ var formatter = new Intl.NumberFormat('en-US',
 function ChipStackHTML(amt)
 {
 	var html_output = '';
-	var t = 0; // CSS top variable
-	var amt_proc = amt;
-	var chip_list = [100000, 25000, 5000, 1000, 500, 100, 25, 5];
-	for (var i = 0; i < chip_list.length; i++)
-	{
-		chip_use = chip_list[i];
-		_floor = Math.floor(amt_proc/chip_use);
-
-		for (var j = 0; j < _floor; j++)
+	if (amt!=0) {
+		html_output += '<div class = "chipshadow" style = "top: -3px ; left: -3px"></div>'
+		var t = 0; // CSS top variable
+		var amt_proc = amt;
+		var chip_list = [100000, 25000, 5000, 1000, 500, 100, 25, 5];
+		for (var i = 0; i < chip_list.length; i++)
 		{
-			html_output += '<div class = "chip_' + chip_use + '" style = "top: ' + t + 'px"></div>';
-			t -= 5;
-			amt_proc -= chip_use;
+			chip_use = chip_list[i];
+			_floor = Math.floor(amt_proc/chip_use);
+
+			for (var j = 0; j < _floor; j++)
+			{
+				html_output += '<div class = "chip_' + chip_use + '" style = "top: ' + t + 'px"></div>';
+				t -= 5;
+				amt_proc -= chip_use;
+			}
 		}
+
+		html_amtlabel = '<div class = "chip-label"><span>' + formatter.format(amt) + '</span></div>';
+		html_output += html_amtlabel;
 	}
 
-	html_amtlabel = '<div class = "chip-label"><span>' + formatter.format(amt) + '</span></div>';
-	return html_output + html_amtlabel;
+	return html_output;
 };
 
 // #Chipstack Block

@@ -23,7 +23,7 @@
 	<section class = 'main'>
 		<!-- Button trigger modal -->
 		<button id="guideline" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-		  Game Start
+		  Start Game
 		</button>
 
 
@@ -56,9 +56,16 @@
 		<section id="chipoffset" class = 'chipoffset' style="display: none">
 			<div id = "arrowL" class="arrowL" onclick="Game.AdjustChips(-1)" style="display:none"></div>
 
+			<div class="chipshadow sd0"></div>
 			<div id = "chip0" class="chip0" onclick="Game.BetChip(0)"></div>
+			
+			<div class="chipshadow sd1"></div>
 			<div id = "chip1" class="chip1" onclick="Game.BetChip(1)"></div>
+			
+			<div class="chipshadow sd2"></div>
 			<div id = "chip2" class="chip2" onclick="Game.BetChip(2)"></div>
+			
+			<div class="chipshadow sd3"></div>
 			<div id = "chip3" class="chip3" onclick="Game.BetChip(3)"></div>
 
 			<div id = "arrowR" class="arrowR" onclick="Game.AdjustChips(1)"></div>
@@ -113,7 +120,7 @@
 			
 			<!-- Btn Split -->
 			<button id="btn-split" class="btn-form" style="display: none" onclick="Player.Split()">
-				<div class="btn-split btn-popup" tabindex="0" data-toggle="popover" data-trigger = "focus" data-content="We are developing this!" data-placement="top"></div>
+				<div class="btn-split btn-popup" tabindex="0" data-toggle="popover" data-trigger = "focus" data-content="Your balance is too low" data-placement="top"></div>
 			</button>
 			
 			<!-- Btn Insure -->
@@ -145,8 +152,18 @@
 		</section>
 
 		<!-- Player-hand block -->
-		<section id="player-hand-0" class="player-hand" style="display:block">
-			<div id="score-label" class="score-label" style="display: none">
+		<section id="player-hand-0" class="player-hand p0" style="display:block">
+			<div id="score-label-0" class="score-label" style="display: none">
+			</div>
+		</section>
+
+		<section id="player-hand-1" class="player-hand p1" style="display:block">
+			<div id="score-label-1" class="score-label" style="display: none">
+			</div>
+		</section>
+
+		<section id="player-hand-2" class="player-hand p2" style="display:block">
+			<div id="score-label-2" class="score-label" style="display: none">
 			</div>
 		</section>
 
@@ -238,7 +255,6 @@ $('.popover-dismiss').popover({
   trigger: 'focus'
 });
 
-$('.btn-popup').popover('disable');
 </script>
 
 <style>
