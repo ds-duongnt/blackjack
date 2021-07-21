@@ -3,7 +3,14 @@ class Player():
 		self.bankroll = bankroll
 		self.balance = bankroll
 		self.name = name
+		self.hand = []
+		self.handprtindex = 0
 
+	def reset_hand(self, hand=False):
+		self.handprtindex = 0
+		if hand:
+			self.hand = []
+		
 	def win(self, bet_amount:float, printout: bool = True):
 		self.balance += bet_amount
 		if printout:

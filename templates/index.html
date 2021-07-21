@@ -8,6 +8,7 @@
 	<script src="{{ url_for('static', filename='js/game.js') }}" type="text/javascript"></script>
 	<script src= "{{ url_for('static', filename='js/chipstack.js') }}" type="text/javascript"></script>
 	<script src= "{{ url_for('static', filename='js/dealer.js') }}" type="text/javascript"></script>
+	<script src= "{{ url_for('static', filename='js/hand.js') }}" type="text/javascript"></script>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="UTF=8">
@@ -20,7 +21,7 @@
 
 </head>
 <body>
-	<section class = 'main'>
+	<section id = 'main' class = 'main'>
 		<!-- Button trigger modal -->
 		<button id="guideline" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
 		  Start Game
@@ -78,7 +79,11 @@
 		<!--SILDER -->
 		<div id="bankroll-slider" class="bankroll-slider"></div>
 
-		<div id="hand-slider" class="hand-slider"></div>
+		<div id="hand-slider-0" class="hand-slider"></div>
+
+		<div id="hand-slider-1" class="hand-slider"></div>
+
+		<div id="hand-slider-2" class="hand-slider"></div>
 
 		<div id="insure-slider" class="hand-slider"></div>
 
@@ -86,14 +91,10 @@
 		<section id = 'insure-stack' class="insure-stack">
 		</section>
 
-		<!-- bet-stack -->
-		<section id="bet-stack" class = "bet-stack">
-		</section>
-
 		<!-- game-btn block -->
 		<section id="game-btn" class = 'game-btn'>
 			<!-- Btn Deal -->
-			<button type="submit" id="btn-deal" class="btn-form" style="display: none" onclick="Game.Deal(Player.Handstack[0].Amount)">
+			<button type="submit" id="btn-deal" class="btn-form" style="display: none" onclick="Game.Deal(Player.Betstack.Amount)">
 				<div class="btn-deal"></div>
 			</button>
 			
@@ -145,6 +146,11 @@
 			
 		</section>
 		
+		<!-- Shoe block -->
+		<section id="shoe" class = "shoe">
+			<!-- <div class = "cardgame card-01c"></div> -->
+		</section>
+
 		<!-- Dealer-hand block -->
 		<section id="dealer-hand" class = 'dealer-hand' style="display: block">
 			<div id="dealer-score-label" class="score-label" style="display: none">
@@ -153,23 +159,56 @@
 
 		<!-- Player-hand block -->
 		<section id="player-hand-0" class="player-hand p0" style="display:block">
+
+			<!-- bet-stack -->
+			<div id="bet-stack-0" class = "bet-stack b0">
+				<!-- <div class= 'chipshadow' style='top: -3px ; left: -3px'></div>
+				<div class='chip_1000' style='top: 0px'></div>
+				<div class='chip-label'><span>$1,000</span></div> -->
+
+			</div>
+
+			<!-- Score label -->
 			<div id="score-label-0" class="score-label" style="display: none">
 			</div>
+
 		</section>
 
 		<section id="player-hand-1" class="player-hand p1" style="display:block">
+
+			<!-- bet-stack -->
+			<div id="bet-stack-1" class = "bet-stack b1">
+				<!-- <div class= 'chipshadow' style='top: -3px ; left: -3px'></div>
+				<div class='chip_1000' style='top: 0px'></div>
+				<div class='chip-label'><span>$1,000</span></div> -->
+			</div>
+
+
 			<div id="score-label-1" class="score-label" style="display: none">
 			</div>
 		</section>
 
 		<section id="player-hand-2" class="player-hand p2" style="display:block">
+
+			<!-- bet-stack -->
+			<div id="bet-stack-2" class = "bet-stack b2">
+				<!-- <div class= 'chipshadow' style='top: -3px ; left: -3px'></div>
+				<div class='chip_1000' style='top: 0px'></div>
+				<div class='chip-label'><span>$1,000</span></div> -->
+			</div>
+
 			<div id="score-label-2" class="score-label" style="display: none">
 			</div>
 		</section>
 
+<!-- 		<div id="bet-stack-t" class = "bet-stack">
+			<div class= 'chipshadow' style='top: -3px ; left: -3px'></div>
+			<div class='chip_1000' style='top: 0px'></div>
+			<div class='chip-label'><span>$1,000</span></div>
+		</div> -->
 
 	</section>
-	
+
 
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -254,6 +293,10 @@ $(function () {
 $('.popover-dismiss').popover({
   trigger: 'focus'
 });
+
+// Obj.Initialize();
+// Obj.PlayerHand[1].CreateCard('02c');
+// Obj.PlayerHand[2].CreateCard('02d');
 
 </script>
 

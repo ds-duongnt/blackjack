@@ -23,7 +23,11 @@ var Obj =
   DealerHand: null,
   DealerScoreLabel:null,
   PlayerHand: [],
+  OriginalPlayerHand: [],
   PlayerScoreLabel: [],
+  BetStack: [],
+  BetSlider: [],
+  Shoe: null,
 
   Initialize: function()
   {
@@ -57,15 +61,19 @@ var Obj =
     // BankrollStack
     Obj.BankrollStack = document.getElementById('bankroll-stack');
 
-    // HandStack
-    Obj.HandStack = document.getElementById('bet-stack');
+    // BetStack
+    Obj.BetStack[0] = document.getElementById('bet-stack-0');
+    Obj.BetStack[1] = document.getElementById('bet-stack-1');
+    Obj.BetStack[2] = document.getElementById('bet-stack-2');
 
     // InsureStack
     Obj.InsureStack = document.getElementById('insure-stack');
 
     // HandSlider
     Obj.BankrollSlider = document.getElementById('bankroll-slider');
-    Obj.HandSlider = document.getElementById('hand-slider');
+    Obj.BetSlider[0] = document.getElementById('hand-slider-0');
+    Obj.BetSlider[1] = document.getElementById('hand-slider-1');
+    Obj.BetSlider[2] = document.getElementById('hand-slider-2');
     Obj.InsureSlider = document.getElementById('insure-slider');
 
     // Guideline
@@ -85,6 +93,31 @@ var Obj =
 
     Obj.PlayerHand[2] = document.getElementById('player-hand-2');
     Obj.PlayerScoreLabel[2] = document.getElementById('score-label-2');
+
+    // Shoe
+    Obj.Shoe = document.getElementById('shoe');
+  },
+
+  Reset: function() {
+
+    // Obj.BetStack[0].innerHTML = "<div id='bet-stack-0' class = 'bet-stack'></div>";
+    // Obj.PlayerScoreLabel[0].innerHTML = "<div id='score-label-0' class='score-label' style='display: none'></div>";
+    // Obj.BetStack[1].innerHTML = "<div id='bet-stack-1' class = 'bet-stack'></div>";
+    // Obj.PlayerScoreLabel[1].innerHTML = "<div id='score-label-1' class='score-label' style='display: none'></div>";
+    // Obj.BetStack[2].innerHTML = "<div id='bet-stack-2' class = 'bet-stack'></div>";
+    // Obj.PlayerScoreLabel[2].innerHTML = "<div id='score-label-2' class='score-label' style='display: none'></div>";
+    for (i=0; i < Obj.PlayerHand.length; i++) {
+      Obj.BetStack[i].innerHTML = "";
+      Obj.BetStack[i].removeAttribute('style');
+      
+      Obj.PlayerScoreLabel[i].innerHTML = "";
+
+      Obj.PlayerHand[i].innerHTML = "";
+      Obj.PlayerHand[i].appendChild(Obj.BetStack[i]);
+      Obj.PlayerHand[i].appendChild(Obj.PlayerScoreLabel[i]);
+    }
+
+    Obj.DealerHand.innerHTML = "<div id='dealer-score-label' class='score-label' style='display: none'></div>"; 
   }
 
 };
@@ -128,6 +161,49 @@ Element.prototype.Slide = function(x1, y1, x2, y2, fps, duration, delay)
         return delay + duration;
     };
 
+Element.prototype.ObjSlide = function(to_obj, fps, duration, delay, x_add = 0, y_add = 0)
+{
+
+  var x1 = this.getBoundingClientRect().left;
+  var y1 = this.getBoundingClientRect().top;
+  var objslide = document.body.appendChild(this);
+  objslide.MoveTo(x1,y1);
+
+  var x2 = to_obj.getBoundingClientRect().left + x_add;
+  var y2 = to_obj.getBoundingClientRect().top + y_add;
+
+  var frames = Math.round(duration * fps / 1000); if(frames < 2) frames = 2;
+  var speed = duration / frames;
+  var percent = 89/90;
+  var decay   = -Math.log(1 / (1 - percent)) / frames;
+
+  delay = delay ? delay : 0;
+
+  var p, t, x, y, func = [], time = [];
+
+  for (t = 0; t <= frames; ++t)
+        {
+            p = (1 - Math.exp(t * decay)) / percent;
+            x = x1 + ((x2 - x1) * p);
+            y = y1 + ((y2 - y1) * p);
+
+            func[t] = SetPosVis(objslide, x, y);
+            time[t] = delay + (t * speed);
+        }
+
+  SpawnAnimation(func, time);
+
+  delay += duration;
+  setTimeout(function() {
+    objslide.style.left = x_add + "px";
+    objslide.style.top = y_add + "px";
+    to_obj.appendChild(objslide);
+  },
+  delay)
+  
+  return delay;
+}
+
 // MoveTo
 Element.prototype.MoveTo = function(x, y)
   {
@@ -136,12 +212,21 @@ Element.prototype.MoveTo = function(x, y)
   };
 
 // CreateCardGame
+// Element.prototype.CreateCard = function(card_symbol, card_double = false) {
+//   var div = document.createElement("div");
+//   div.className = "cardgame card-" + (card_symbol == 'fd' ? 'back' : card_symbol);
+//   div.className += card_double ? " card-double" : "";
+//   div.style.left = "800px";
+//   div.style.top = "-350px";
+
+//   this.appendChild(div);
+//   return div;
+// }
+
 Element.prototype.CreateCard = function(card_symbol, card_double = false) {
   var div = document.createElement("div");
   div.className = "cardgame card-" + (card_symbol == 'fd' ? 'back' : card_symbol);
-  div.className += card_double ? " card-double" : "";
-  div.style.left = "800px";
-  div.style.top = "-350px";
+  div.className += card_double ? "card-double" : ""; // Horizontally displayed
 
   this.appendChild(div);
   return div;

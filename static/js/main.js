@@ -136,3 +136,8 @@ function StackSlide(from_obj, to_obj, amt)
 
     return delay;
 }
+
+function CardSlide(from_obj, to_obj)
+{
+    from_obj
+}

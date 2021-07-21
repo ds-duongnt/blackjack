@@ -277,8 +277,8 @@ body {
   flex-direction: column;
   align-items: center;
   position: absolute;
-  left: 170px;
-  top: 515px;
+  left: 110px;
+  top: 500px;
 }
 
 .hand-slider {
@@ -301,15 +301,29 @@ body {
 }
 
 .bet-stack {
-  /*border: 1px solid red;*/
+  /*border: 1px solid blue;*/
   display: flex;
   flex-direction: column;
   align-items: center;
   position: absolute;
-  left: 453px;
-  top: 355px;
+ /* left: 453px;
+  top: 355px;*/
 }
 
+.b0 {
+  left: 19px;
+  top: -143px;
+}
+
+.b1 {
+  left: 9px;
+  top: -104px;
+}
+
+.b2 {
+  left: 9px;
+  top: -104px;
+}
 /*btn-block*/
 .game-btn {
   position: absolute;
@@ -421,6 +435,15 @@ body {
   left: 60px;
 }
 
+/*SHOE BLOCK*/
+.shoe {
+  border:  1px solid red;
+  position:  absolute;
+  top: 2%;
+  left: 130%;
+
+}
+
 /*DEALER BLOCK*/
 .dealer-hand {
   /*border: 1px solid blue;*/
@@ -432,24 +455,24 @@ body {
 
 /*PLAYER BLOCK*/
 .player-hand {
-  border: 1px solid red;
+  /*border: 1px solid red;*/
   display: flex;
   position: absolute;
 }
 
 .p0 {
-  top: 65%;
   left: 45%;
+  top: 65%;
 }
 
 .p1 {
+  left: 28%;
   top: 60%;
-  left: 35%;
 }
 
 .p2 {
+  left: 64%  ;
   top: 60%;
-  left: 55%;
 }
 
 .score-label {
@@ -470,6 +493,11 @@ body {
   font-weight: bold;
   padding: 4px 10px;
   /*width: auto;*/
+}
+
+.score-prt > span {
+  background-color: yellow;
+  color: #000;
 }
 /*CARDS BLOCK*/
 .cardgame {

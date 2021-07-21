@@ -72,89 +72,103 @@ function ChipStack(stack, slider, left, top)
 	// LOSE
 	this.lose = function(delay)
 	{
-		var bet = this.Amount;
-		var stack = this.Stack;
-		var slider = this.Slider;
-		var x = this.Left;
-		var y = this.Top;
-		var speed = 250;
+		var that = this;
+		setTimeout(function() {
+			var bet = that.Amount;
+			var stack = that.Stack;
+			var slider = that.Slider;
+			var x = that.Left;
+			var y = that.Top;
+			var speed = 250;
 
-		slider.MoveTo(x, y);
-		slider.innerHTML = stack.innerHTML;
-		stack.innerHTML = '';
+			slider.MoveTo(x, y);
+			slider.innerHTML = stack.innerHTML;
+			stack.innerHTML = '';
 
-		delay = slider.Slide(x, y, 450, -45, 100, speed, delay);
+			slider.Slide(x, y, 450, -45, 100, speed, 0);
 
-		setTimeout(function()
-		{
-			slider.innerHTML = '';
+			setTimeout(function()
+			{
+				slider.innerHTML = '';
+			},
+			250);
 		},
-		delay);
-
-		return delay;
+		delay)
+		
+		return delay + 250;
 	}
 
 	// WIN
 	this.win = function(amt, delay)
 	{
-		var bet = this.Amount;
-		var stack = this.Stack;
-		var slider = this.Slider
-		var x = this.Left;
-		var y = this.Top;
-		var speed = 250;
+		var that = this;
+		setTimeout(function() {
+			var bet = that.Amount;
+			var stack = that.Stack;
+			var slider = that.Slider
+			var x = that.Left;
+			var y = that.Top;
+			var speed = 250;
 
-		slider.MoveTo(450, -45); // Dealer Pos
-		slider.innerHTML = ChipStackHTML(amt);
+			slider.MoveTo(450, -45); // Dealer Pos
+			slider.innerHTML = ChipStackHTML(amt);
 
-		delay = slider.Slide(450, -45, x + 60 , y, 100, speed, delay) + 250;
+			slider.Slide(450, -45, x + 60 , y, 100, speed, 0);
 
-		delay = slider.Slide(x + 60, y, x, y, 100, speed, delay);
+			slider.Slide(x + 60, y, x, y, 100, speed, 500);
 
-		setTimeout(function()
-		{
-			stack.innerHTML = '';
-			slider.innerHTML = ChipStackHTML(amt+bet);
+			setTimeout(function()
+			{
+				stack.innerHTML = '';
+				slider.innerHTML = ChipStackHTML(amt+bet);
+			},
+			750)
+
+			// delay += 250;
+
+			slider.Slide(x, y, Player.Bankroll.Left, Player.Bankroll.Top, 100, speed, 750);
+
+			setTimeout(function()
+			{
+				slider.innerHTML = '';
+				Player.Bankroll.Increase(bet+amt);
+				console.log('win stack -- done --');
+
+			},
+			1000)
 		},
 		delay)
 
-		delay += 250;
-
-		delay = slider.Slide(x, y, Player.Bankroll.Left, Player.Bankroll.Top, 100, speed, delay);
-
-		setTimeout(function()
-		{
-			slider.innerHTML = '';
-			Player.Bankroll.Increase(bet+amt);
-		},
-		delay)
-
-		return delay;
+		return delay + 1000;
 	}
 
 	// PUSH
 	this.push = function(delay)
 	{
-		var bet = this.Amount;
-		var stack = this.Stack;
-		var slider = this.Slider
-		var x = this.Left;
-		var y = this.Top;
-		var speed = 250;
+		var that = this;
+		setTimeout(function() {
+			var bet = that.Amount;
+			var stack = that.Stack;
+			var slider = that.Slider
+			var x = that.Left;
+			var y = that.Top;
+			var speed = 250;
 
-		slider.MoveTo(x,y);
-		slider.innerHTML = stack.innerHTML;
-		stack.innerHTML = '';
+			slider.MoveTo(x,y);
+			slider.innerHTML = stack.innerHTML;
+			stack.innerHTML = '';
 
-		delay = slider.Slide(x,y, Player.Bankroll.Left, Player.Bankroll.Top, 100, speed, delay);
+			slider.Slide(x,y, Player.Bankroll.Left, Player.Bankroll.Top, 100, speed, 0);
 
-		setTimeout(function()
-		{
-			slider.innerHTML = '';
-			Player.Bankroll.Increase(bet);
+			setTimeout(function()
+			{
+				slider.innerHTML = '';
+				Player.Bankroll.Increase(bet);
+			},
+			250)
 		},
 		delay)
-
-		return delay;
+		
+		return delay + 250;
 	}
 }

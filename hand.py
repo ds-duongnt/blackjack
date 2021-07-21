@@ -33,10 +33,11 @@ def hand_print(hand, player: bool = True, hand_num: int = 0, bj_check: bool = Tr
 
 
 class Hand():
-	def __init__(self, hand: list, freeze: bool = False, player = None):
+	def __init__(self, hand: list, freeze: bool = False, player = None, child: bool = False):
 		self.hand = hand
 		self.player = player
 		self.freeze = freeze
+		self.ischild = child
 
 		self.score = hand[0].get_score()
 		self.score = cal_score(self.score, hand[-1])
@@ -46,6 +47,13 @@ class Hand():
 		self.insurance = False
 		self.child = []
 		self.spl_check = self.split_check()
+
+		self.end = False
+		self.hand_examine()
+
+	def hand_examine(self):
+		if (self.get_max_score() == 21) or (self.busted_check()) or ('stand' in self.decision or 'x2' in self.decision or 'split' in self.decision) or (self.freeze):
+			self.end = True
 
 	def get_hand(self):
 		return [v.__str__() for v in self.hand]
@@ -60,6 +68,7 @@ class Hand():
 		self.score = cal_score(self.score, card)
 		self.action += 1
 		self.decision.append('hit')
+		self.hand_examine()
 
 	def x2(self, shoe):
 		card = shoe.hit()
@@ -67,10 +76,12 @@ class Hand():
 		self.score = cal_score(self.score, card)
 		self.action += 1
 		self.decision.append('x2')
+		self.hand_examine()
 
 	def stand(self):
 		self.action += 1
 		self.decision.append('stand')
+		self.hand_examine()
 
 	def split_check(self) -> bool:
 		if self.action == 0:
@@ -83,11 +94,12 @@ class Hand():
 	def split(self, shoe):
 		if self.split_check():
 			freeze = self.freeze_check()
-			hand_1, hand_2 = Hand([self.hand[0], shoe.hit()], freeze = freeze, player = self.player), \
-			Hand([self.hand[-1], shoe.hit()], freeze = freeze, player  = self.player)	
+			hand_1, hand_2 = Hand([self.hand[0], shoe.hit()], freeze = freeze, player = self.player, child = True), \
+			Hand([self.hand[-1], shoe.hit()], freeze = freeze, player  = self.player, child = True)	
 			self.action += 1
 			self.decision.append('split')
 			self.child += [hand_1, hand_2]
+			self.hand_examine()
 			return hand_1, hand_2
 
 	def get_printable_score(self):
@@ -105,7 +117,7 @@ class Hand():
 		return True if self.get_printable_score() == '' else False
 
 	def blackjack_check(self) -> bool:
-		return True if self.action == 0 and len(self.hand) == 2 and self.get_max_score()==21 else False
+		return True if not self.ischild and self.action == 0 and len(self.hand) == 2 and self.get_max_score()==21 else False
 
 	def freeze_check(self) -> bool:
 		return True if len(self.hand) == 2 and self.hand[0].card_face == 'Ac' and self.hand[-1].card_face == 'Ac' else False

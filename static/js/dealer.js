@@ -12,9 +12,7 @@ var Dealer =
 		Dealer.Left = 0;
 		Dealer.Top = 0;
 		Dealer.Maxscore = null,
-		Dealer.Handcard = [],
-
-		Obj.DealerHand.innerHTML = "<div id='dealer-score-label' class='score-label' style='display: none'></div>";
+		Dealer.Handcard = []
 
 	},
 
